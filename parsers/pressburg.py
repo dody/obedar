@@ -9,8 +9,7 @@ except ModuleNotFoundError:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from parsers.base import RestaurantParser
 
-PRESSBURG_URL = "https://pressburg.foodgarden.sk/#denne-menu"
-VEGAN_MENU_HEADER = "VEGÁN MENU"
+VEGAN_TAB_TITLE = "VEGÁN MENU"
 
 
 def _find_tab_pane(section: Tag, tab_title: str, fallback_id: str) -> Tag | None:
@@ -79,9 +78,6 @@ def _parse_pane_items(pane: Tag | None) -> list[str]:
 class PressburgParser(RestaurantParser):
     """Daily menu parser for FoodGarden Pressburg."""
 
-    name = "FoodGarden Pressburg"
-    url = PRESSBURG_URL
-
     def parse(self, html: str) -> list[str]:
         soup = BeautifulSoup(html, "html.parser")
         section = soup.find(id="denne-menu")
@@ -89,7 +85,7 @@ class PressburgParser(RestaurantParser):
             raise ValueError("Could not find '#denne-menu' section in page HTML.")
 
         regular_pane = _find_tab_pane(section, "DENNÉ MENU", fallback_id="tab-021")
-        vegan_pane = _find_tab_pane(section, VEGAN_MENU_HEADER, fallback_id="tab-031")
+        vegan_pane = _find_tab_pane(section, VEGAN_TAB_TITLE, fallback_id="tab-031")
 
         regular_items = _parse_pane_items(regular_pane)
         vegan_items = _parse_pane_items(vegan_pane)
@@ -105,17 +101,3 @@ class PressburgParser(RestaurantParser):
 def parse_pressburg_menu(html: str) -> list[str]:
     """Parse raw FoodGarden Pressburg HTML into a list of menu lines."""
     return PressburgParser().parse(html)
-
-
-def get_pressburg_menu(timeout: float = 15.0) -> list[str]:
-    """Fetch and parse today's FoodGarden Pressburg menu into a list of lines."""
-    return PressburgParser().get_menu(timeout=timeout)
-
-
-if __name__ == "__main__":
-    if hasattr(sys.stdout, "reconfigure"):
-        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-
-    lines = get_pressburg_menu()
-    for line in lines:
-        print(line)

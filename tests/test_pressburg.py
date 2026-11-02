@@ -1,6 +1,8 @@
 import unittest
 
-from parsers.pressburg import parse_pressburg_menu
+from main import build_menu_data
+from parsers.pressburg import PressburgParser, parse_pressburg_menu
+from restaurants import RestaurantConfig
 
 SAMPLE_HTML = """
 <!doctype html>
@@ -78,6 +80,11 @@ SAMPLE_HTML = """
 """
 
 
+class _StubPressburgParser(PressburgParser):
+    def fetch_html(self, timeout: float = 15.0) -> str:
+        return SAMPLE_HTML
+
+
 class PressburgParserTests(unittest.TestCase):
     def test_parses_regular_and_vegan_menus_into_single_list(self) -> None:
         result = parse_pressburg_menu(SAMPLE_HTML)
@@ -86,13 +93,40 @@ class PressburgParserTests(unittest.TestCase):
             [
                 "Zeleninový vývar s cestovinou (1,3,9) 1 €",
                 "Bravčová panenka v slaninke, hríbová omáčka,opekané baby zemiaky (1,7) 8.90 €",
-                "VEGÁN MENU",
+                "VEGÁN MENU:",
                 "Pórová krémová polievka (1,9) 1 €",
                 "Brokolicový krém 1 €",
             ],
         )
 
+    def test_build_menu_data_produces_expected_payload_structure(self) -> None:
+        configs = [
+            RestaurantConfig(
+                section_id="Food Garden",
+                url="https://pressburg.foodgarden.sk/#denne-menu",
+                parser=_StubPressburgParser,
+            )
+        ]
+        data = build_menu_data(restaurants=configs, author="python script 1")
+        self.assertEqual(
+            data,
+            {
+                "author": "python script 1",
+                "sections": [
+                    {
+                        "section_id": "Food Garden",
+                        "menu": [
+                            "Zeleninový vývar s cestovinou (1,3,9) 1 €",
+                            "Bravčová panenka v slaninke, hríbová omáčka,opekané baby zemiaky (1,7) 8.90 €",
+                            "VEGÁN MENU:",
+                            "Pórová krémová polievka (1,9) 1 €",
+                            "Brokolicový krém 1 €",
+                        ],
+                    }
+                ],
+            },
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
-

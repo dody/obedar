@@ -25,10 +25,13 @@ def fetch_html(url: str, timeout: float = 15.0) -> str:
 class RestaurantParser(ABC):
     """Base interface for restaurant daily menu parsers."""
 
-    name: str
-    url: str
+    def __init__(self, url: str = "", section_id: str = "") -> None:
+        self.url = url
+        self.section_id = section_id
 
     def fetch_html(self, timeout: float = 15.0) -> str:
+        if not self.url:
+            raise ValueError(f"{self.__class__.__name__} requires a non-empty URL to fetch HTML.")
         return fetch_html(self.url, timeout=timeout)
 
     @abstractmethod
@@ -39,4 +42,3 @@ class RestaurantParser(ABC):
         """Fetch the restaurant page and return the parsed list of menu lines."""
         html = self.fetch_html(timeout=timeout)
         return self.parse(html)
-
