@@ -73,9 +73,8 @@ class RotundaParserTests(unittest.TestCase):
 
 ### Step 4: Implement the Parser (`parsers/<slug>.py`) & Wire `restaurants.py`
 
-1. Implement the parser class in `parsers/<slug>.py` inheriting from `RestaurantParser` and using `from bs4 import BeautifulSoup`.
-2. Export the parser in `parsers/__init__.py`.
-3. Set `parser=<NewParserClass>` on the restaurant's `RestaurantConfig` entry in `restaurants.py`.
+1. Implement the parser class in `parsers/<slug>.py` inheriting from `RestaurantParser` and using `from bs4 import BeautifulSoup`. Do not add unused exports in `parsers/__init__.py` or unused helper functions.
+2. Set `parser=<NewParserClass>` on the restaurant's `RestaurantConfig` entry in `restaurants.py`.
 
 ### Step 5: Verify with Unit Tests and `main.py`
 

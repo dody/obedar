@@ -2,9 +2,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from parsers.base import RestaurantParser, fetch_html
-
-DEFAULT_URL = "https://www.lunch-break.sk/menu-apollo"
+from parsers.base import RestaurantParser
 
 _PRICE_ONLY_RE = re.compile(r"^\d+[.,]\d+\s*€$")
 _IGNORED_LINES = {
@@ -59,16 +57,7 @@ def parse_lunch_break_menu(html: str) -> list[str]:
 
 
 class LunchBreakParser(RestaurantParser):
-    """Menu parser for Lunch Break (https://www.lunch-break.sk/menu-apollo)."""
-
-    def __init__(self, url: str = DEFAULT_URL, section_id: str = "Lunch Break") -> None:
-        super().__init__(url=url, section_id=section_id)
+    """Menu parser for Lunch Break."""
 
     def parse(self, html: str) -> list[str]:
         return parse_lunch_break_menu(html)
-
-
-def scrape_lunch_break_menu(url: str = DEFAULT_URL) -> list[str]:
-    """Fetch and parse the current daily menu from Lunch Break."""
-    html = fetch_html(url)
-    return parse_lunch_break_menu(html)
