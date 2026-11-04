@@ -1,4 +1,4 @@
-from parsers.sme import SmeParser, parse_sme_menu
+from parsers.sme import SmeParser
 
 
 class SestkaParser(SmeParser):

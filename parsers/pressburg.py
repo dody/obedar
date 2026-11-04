@@ -82,7 +82,7 @@ class PressburgParser(RestaurantParser):
         soup = BeautifulSoup(html, "html.parser")
         section = soup.find(id="denne-menu")
         if not isinstance(section, Tag):
-            raise ValueError("Could not find '#denne-menu' section in page HTML.")
+            raise ValueError("Could not find '#denne-menu' section in page HTML.")  # noqa: TRY004
 
         regular_pane = _find_tab_pane(section, "DENNÉ MENU", fallback_id="tab-021")
         vegan_pane = _find_tab_pane(section, VEGAN_TAB_TITLE, fallback_id="tab-031")

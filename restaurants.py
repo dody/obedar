@@ -11,7 +11,7 @@ class RestaurantConfig:
 
     section_id: str
     url: str
-    parser: type[RestaurantParser]
+    parser: type[RestaurantParser] | None = None
 
 
 AUTHOR = "python script 1"

@@ -66,9 +66,7 @@ def _is_structured_sme_columns(cols: list[str]) -> bool:
             return False
     if len(number_col) > 8:
         return False
-    if len(cols) == 5 and "€" not in cols[4]:
-        return False
-    return True
+    return not (len(cols) == 5 and "€" not in cols[4])
 
 
 def _format_line(dish: str, price: str, allergens: str) -> str:
@@ -98,7 +96,7 @@ def _parse_freeform_item(raw_text: str, right_price: str) -> str | None:
     lead_alg = _LEADING_ALLERGEN_RE.match(text)
     if lead_alg:
         allergens = _normalize_allergen_inner(lead_alg.group(1))
-        text = text[lead_alg.end() :].strip()
+        text = text[lead_alg.end():].strip()
     else:
         trail_alg = _TRAILING_ALLERGEN_RE.search(text)
         if trail_alg:
@@ -144,7 +142,7 @@ class SmeParser(RestaurantParser):
         soup = BeautifulSoup(html, "html.parser")
         menu_wrapper = soup.select_one("div.denne_menu")
         if not isinstance(menu_wrapper, Tag):
-            raise ValueError("Could not find 'div.denne_menu' section in page HTML.")
+            raise ValueError("Could not find 'div.denne_menu' section in page HTML.")  # noqa: TRY004
 
         menu_lines: list[str] = []
         for today_block in menu_wrapper.select("div.dnesne_menu"):
@@ -168,4 +166,3 @@ class SmeParser(RestaurantParser):
 def parse_sme_menu(html: str) -> list[str]:
     """Parse raw restauracie.sme.sk HTML into a list of formatted menu lines."""
     return SmeParser().parse(html)
-

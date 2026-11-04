@@ -13,6 +13,10 @@ def build_menu_data(
     """Scrape all configured restaurants and return the payload dict ready for JSON upload."""
     sections: list[dict[str, Any]] = []
     for entry in restaurants:
+        if entry.parser is None:
+            raise ValueError(
+                f"Restaurant '{entry.section_id}' does not have a parser assigned in restaurants.py."
+            )
         parser = entry.parser(url=entry.url, section_id=entry.section_id)
         menu_lines = parser.get_menu(timeout=timeout)
         sections.append(
