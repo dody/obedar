@@ -5,13 +5,8 @@ import unicodedata
 from datetime import date
 from pathlib import Path
 
-try:
-    from parsers.base import fetch_html
-    from restaurants import RESTAURANTS, RestaurantConfig
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from parsers.base import fetch_html
-    from restaurants import RESTAURANTS, RestaurantConfig
+from parsers.base import fetch_html
+from restaurants import RESTAURANTS, RestaurantConfig
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
