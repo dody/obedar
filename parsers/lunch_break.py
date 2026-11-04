@@ -1,4 +1,5 @@
 import re
+
 from bs4 import BeautifulSoup
 
 from parsers.base import RestaurantParser, fetch_html
