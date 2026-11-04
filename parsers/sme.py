@@ -1,14 +1,8 @@
 import re
-import sys
-from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
 
-try:
-    from parsers.base import RestaurantParser
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from parsers.base import RestaurantParser
+from parsers.base import RestaurantParser
 
 _UNIT_AMOUNT = r"\d+(?:[.,]\d+)?\s*(?:g|kg|ml|l|dl|cl)\+?"
 _WEIGHT_EXPR = rf"{_UNIT_AMOUNT}(?:\s*/\s*{_UNIT_AMOUNT})*"

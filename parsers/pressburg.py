@@ -1,13 +1,6 @@
-import sys
-from pathlib import Path
-
 from bs4 import BeautifulSoup, Tag
 
-try:
-    from parsers.base import RestaurantParser
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from parsers.base import RestaurantParser
+from parsers.base import RestaurantParser
 
 VEGAN_TAB_TITLE = "VEGÁN MENU"
 
