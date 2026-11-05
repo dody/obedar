@@ -16,8 +16,6 @@ class RestaurantConfig:
     parser: type[RestaurantParser] | None = None
 
 
-AUTHOR = "python script 1"
-
 # Global registry of restaurants to scrape and include in the JSON payload.
 RESTAURANTS: list[RestaurantConfig] = [
     RestaurantConfig(

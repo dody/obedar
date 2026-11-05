@@ -1,13 +1,14 @@
 import json
+import socket
 import sys
 from typing import Any
 
-from restaurants import AUTHOR, RESTAURANTS, RestaurantConfig
+from restaurants import RESTAURANTS, RestaurantConfig
 
 
 def build_menu_data(
     restaurants: list[RestaurantConfig] = RESTAURANTS,
-    author: str = AUTHOR,
+    author: str = socket.gethostname(),
     timeout: float = 15.0,
 ) -> dict[str, Any]:
     """Scrape all configured restaurants and return the payload dict ready for JSON upload."""
