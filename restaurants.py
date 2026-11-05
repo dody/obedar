@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from parsers.base import RestaurantParser
 from parsers.lunch_break import LunchBreakParser
 from parsers.pressburg import PressburgParser
+from parsers.sestka import SestkaParser
 from parsers.sme import SmeParser
 
 
@@ -32,7 +33,7 @@ RESTAURANTS: list[RestaurantConfig] = [
     RestaurantConfig(
         section_id="Šestka",
         url="https://restauracie.sme.sk/restauracia/sestka-canteen_10346-ruzinov_2980/denne-menu",
-        parser=SmeParser,
+        parser=SestkaParser,
     ),
     RestaurantConfig(
         section_id="Lunch Break",
