@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from parsers.base import RestaurantParser
+from parsers.food_garden import FoodGardenParser
 from parsers.lunch_break import LunchBreakParser
-from parsers.pressburg import PressburgParser
 from parsers.sestka import SestkaParser
 from parsers.sme import SmeParser
 
@@ -21,7 +21,7 @@ RESTAURANTS: list[RestaurantConfig] = [
     RestaurantConfig(
         section_id="Food Garden",
         url="https://pressburg.foodgarden.sk/#denne-menu",
-        parser=PressburgParser,
+        parser=FoodGardenParser,
     ),
     RestaurantConfig(
         section_id="Astra",

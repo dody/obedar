@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 from main import build_menu_data
-from parsers.pressburg import PressburgParser, parse_pressburg_menu
+from parsers.food_garden import FoodGardenParser, parse_food_garden_menu
 from restaurants import RestaurantConfig
 
 FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
@@ -25,15 +25,15 @@ EXPECTED_FOOD_GARDEN_MENU = [
 ]
 
 
-class _StubPressburgParser(PressburgParser):
+class _StubFoodGardenParser(FoodGardenParser):
     def fetch_html(self, timeout: float = 15.0) -> str:
         return (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(encoding="utf-8")
 
 
-class PressburgParserTests(unittest.TestCase):
+class FoodGardenParserTests(unittest.TestCase):
     def test_parses_food_garden_fixture(self) -> None:
         html = (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(encoding="utf-8")
-        result = parse_pressburg_menu(html)
+        result = parse_food_garden_menu(html)
         self.assertEqual(result, EXPECTED_FOOD_GARDEN_MENU)
 
     def test_build_menu_data_produces_expected_payload_structure(self) -> None:
@@ -41,7 +41,7 @@ class PressburgParserTests(unittest.TestCase):
             RestaurantConfig(
                 section_id="Food Garden",
                 url="https://pressburg.foodgarden.sk/#denne-menu",
-                parser=_StubPressburgParser,
+                parser=_StubFoodGardenParser,
             )
         ]
         data = build_menu_data(restaurants=configs, author="python script 1")
@@ -61,3 +61,4 @@ class PressburgParserTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

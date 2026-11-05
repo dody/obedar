@@ -68,8 +68,8 @@ def _parse_pane_items(pane: Tag | None) -> list[str]:
     return lines
 
 
-class PressburgParser(RestaurantParser):
-    """Daily menu parser for FoodGarden Pressburg."""
+class FoodGardenParser(RestaurantParser):
+    """Daily menu parser for Food Garden."""
 
     def parse(self, html: str) -> list[str]:
         soup = BeautifulSoup(html, "html.parser")
@@ -91,6 +91,6 @@ class PressburgParser(RestaurantParser):
         return menu_lines
 
 
-def parse_pressburg_menu(html: str) -> list[str]:
-    """Parse raw FoodGarden Pressburg HTML into a list of menu lines."""
-    return PressburgParser().parse(html)
+def parse_food_garden_menu(html: str) -> list[str]:
+    """Parse raw Food Garden HTML into a list of menu lines."""
+    return FoodGardenParser().parse(html)
