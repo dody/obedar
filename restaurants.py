@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from parsers.base import RestaurantParser
+from parsers.bufet import BufetParser
 from parsers.food_garden import FoodGardenParser
 from parsers.lunch_break import LunchBreakParser
 from parsers.sestka import SestkaParser
@@ -37,6 +38,11 @@ RESTAURANTS: list[RestaurantConfig] = [
         section_id="Lunch Break",
         url="https://www.lunch-break.sk/menu-apollo",
         parser=LunchBreakParser,
+    ),
+    RestaurantConfig(
+        section_id="Bufet",
+        url="https://bufet.urbancomp.sk/",
+        parser=BufetParser,
     ),
     # Add future restaurants here, for example:
     # RestaurantConfig(
