@@ -32,6 +32,10 @@ def fetch_html(url: str, timeout: float = 15.0) -> str:
         return response.read().decode(charset, errors="replace")
 
 
+class ParserError(Exception):
+    """Raised when a restaurant page's HTML structure cannot be parsed."""
+
+
 class RestaurantParser(ABC):
     """Base interface for restaurant daily menu parsers."""
 
@@ -41,7 +45,9 @@ class RestaurantParser(ABC):
 
     def fetch_html(self, timeout: float = 15.0) -> str:
         if not self.url:
-            raise ValueError(f"{self.__class__.__name__} requires a non-empty URL to fetch HTML.")
+            raise ValueError(
+                f"{self.__class__.__name__} requires a non-empty URL to fetch HTML."
+            )
         return fetch_html(self.url, timeout=timeout)
 
     @abstractmethod

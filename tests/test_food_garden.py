@@ -27,12 +27,21 @@ EXPECTED_FOOD_GARDEN_MENU = [
 
 class _StubFoodGardenParser(FoodGardenParser):
     def fetch_html(self, timeout: float = 15.0) -> str:
-        return (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(encoding="utf-8")
+        return (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(
+            encoding="utf-8"
+        )
+
+
+class _FailingParser(FoodGardenParser):
+    def fetch_html(self, timeout: float = 15.0) -> str:
+        return ""
 
 
 class FoodGardenParserTests(unittest.TestCase):
     def test_parses_food_garden_fixture(self) -> None:
-        html = (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(encoding="utf-8")
+        html = (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(
+            encoding="utf-8"
+        )
         result = parse_food_garden_menu(html)
         self.assertEqual(result, EXPECTED_FOOD_GARDEN_MENU)
 
@@ -58,7 +67,31 @@ class FoodGardenParserTests(unittest.TestCase):
             },
         )
 
+    def test_build_menu_data_includes_error_lines_when_parser_fails(self) -> None:
+        configs = [
+            RestaurantConfig(
+                section_id="Food Garden",
+                url="https://pressburg.foodgarden.sk/#denne-menu",
+                parser=_FailingParser,
+            )
+        ]
+        data = build_menu_data(restaurants=configs, author="python script 1")
+        self.assertEqual(
+            data,
+            {
+                "author": "python script 1",
+                "sections": [
+                    {
+                        "section_id": "Food Garden",
+                        "menu": [
+                            "https://pressburg.foodgarden.sk/#denne-menu",
+                            "PARSER ERROR: Could not find '#denne-menu' section in page HTML.",
+                        ],
+                    }
+                ],
+            },
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
-

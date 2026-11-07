@@ -2,7 +2,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from parsers.base import RestaurantParser
+from parsers.base import ParserError, RestaurantParser
 
 _PRICE_ONLY_RE = re.compile(r"^\d+[.,]\d+\s*€$")
 _IGNORED_LINES = {
@@ -22,12 +22,13 @@ def parse_lunch_break_menu(html: str) -> list[str]:
     informational boilerplate like 'POLIEVKA JE ZAHRNUTÁ V CENE MENU'.
     """
     soup = BeautifulSoup(html, "html.parser")
-    menu_section = soup.find(id="menu") or soup
+    menu_section = soup.find(id="menu")
+    if menu_section is None:
+        raise ParserError("Could not find '#menu' section in page HTML.")
 
-    toggle = (
-        menu_section.select_one(".et_pb_toggle.et_pb_toggle_open")
-        or menu_section.select_one(".et_pb_toggle")
-    )
+    toggle = menu_section.select_one(
+        ".et_pb_toggle.et_pb_toggle_open"
+    ) or menu_section.select_one(".et_pb_toggle")
     if toggle is None:
         return []
 

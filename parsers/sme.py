@@ -2,7 +2,7 @@ import re
 
 from bs4 import BeautifulSoup, Tag
 
-from parsers.base import RestaurantParser
+from parsers.base import ParserError, RestaurantParser
 
 _UNIT_AMOUNT = r"\d+(?:[.,]\d+)?\s*(?:g|kg|ml|l|dl|cl)\+?"
 _WEIGHT_EXPR = rf"{_UNIT_AMOUNT}(?:\s*/\s*{_UNIT_AMOUNT})*"
@@ -90,7 +90,7 @@ def _parse_freeform_item(raw_text: str, right_price: str) -> str | None:
     lead_alg = _LEADING_ALLERGEN_RE.match(text)
     if lead_alg:
         allergens = _normalize_allergen_inner(lead_alg.group(1))
-        text = text[lead_alg.end():].strip()
+        text = text[lead_alg.end() :].strip()
     else:
         trail_alg = _TRAILING_ALLERGEN_RE.search(text)
         if trail_alg:
@@ -136,7 +136,7 @@ class SmeParser(RestaurantParser):
         soup = BeautifulSoup(html, "html.parser")
         menu_wrapper = soup.select_one("div.denne_menu")
         if not isinstance(menu_wrapper, Tag):
-            raise ValueError("Could not find 'div.denne_menu' section in page HTML.")  # noqa: TRY004
+            raise ParserError("Could not find 'div.denne_menu' section in page HTML.")
 
         menu_lines: list[str] = []
         for today_block in menu_wrapper.select("div.dnesne_menu"):

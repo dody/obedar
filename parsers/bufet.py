@@ -3,7 +3,7 @@ from datetime import date
 
 from bs4 import BeautifulSoup
 
-from parsers.base import RestaurantParser
+from parsers.base import ParserError, RestaurantParser
 
 _DAY_HEADER_RE = re.compile(r"^0?(\d{1,2})\.\s*0?(\d{1,2})\.\s*(\d{4})\b")
 
@@ -16,7 +16,11 @@ def parse_bufet_menu(html: str, target_date: date | None = None) -> list[str]:
     """Parse the daily menu for `target_date` (defaults to today) from Bufet HTML."""
     active_date = target_date or date.today()
     soup = BeautifulSoup(html, "html.parser")
-    content = soup.select_one("#content article.item .content") or soup
+    content = soup.select_one("#content article.item .content")
+    if content is None:
+        raise ParserError(
+            "Could not find '#content article.item .content' section in page HTML."
+        )
 
     lines: list[str] = []
     collecting = False

@@ -8,7 +8,9 @@ FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 
 class LunchBreakParserTests(unittest.TestCase):
     def test_parses_lunch_break_fixture(self) -> None:
-        html = (FIXTURES_DIR / "lunch_break_2026_11_04.html").read_text(encoding="utf-8")
+        html = (FIXTURES_DIR / "lunch_break_2026_11_04.html").read_text(
+            encoding="utf-8"
+        )
         result = parse_lunch_break_menu(html)
         expected = [
             "Štvrtok 05.11.2026",
