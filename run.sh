@@ -2,6 +2,8 @@
 
 set -e
 
+echo "=== $(date '+%Y-%m-%d %H:%M:%S') ==="
+
 PROJECT_DIR="/home/jozef/pokus/obedar"
 
 cd "$PROJECT_DIR"
