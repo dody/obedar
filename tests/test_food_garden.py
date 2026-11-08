@@ -37,6 +37,11 @@ class _FailingParser(FoodGardenParser):
         return ""
 
 
+class _EmptyMenuParser(FoodGardenParser):
+    def fetch_html(self, timeout: float = 15.0) -> str:
+        return "<div id='denne-menu'></div>"
+
+
 class FoodGardenParserTests(unittest.TestCase):
     def test_parses_food_garden_fixture(self) -> None:
         html = (FIXTURES_DIR / "food_garden_2026_11_04.html").read_text(
@@ -86,6 +91,31 @@ class FoodGardenParserTests(unittest.TestCase):
                         "menu": [
                             "https://pressburg.foodgarden.sk/#denne-menu",
                             "PARSER ERROR: Could not find '#denne-menu' section in page HTML.",
+                        ],
+                    }
+                ],
+            },
+        )
+
+    def test_build_menu_data_includes_error_lines_when_menu_is_empty(self) -> None:
+        configs = [
+            RestaurantConfig(
+                section_id="Bufet",
+                url="https://bufet.urbancomp.sk/",
+                parser=_EmptyMenuParser,
+            )
+        ]
+        data = build_menu_data(restaurants=configs, author="python script 1")
+        self.assertEqual(
+            data,
+            {
+                "author": "python script 1",
+                "sections": [
+                    {
+                        "section_id": "Bufet",
+                        "menu": [
+                            "https://bufet.urbancomp.sk/",
+                            "PARSER ERROR: No menu items found.",
                         ],
                     }
                 ],

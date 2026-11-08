@@ -57,4 +57,7 @@ class RestaurantParser(ABC):
     def get_menu(self, timeout: float = 15.0) -> list[str]:
         """Fetch the restaurant page and return the parsed list of menu lines."""
         html = self.fetch_html(timeout=timeout)
-        return self.parse(html)
+        menu_lines = self.parse(html)
+        if not menu_lines:
+            raise ParserError("No menu items found.")
+        return menu_lines
