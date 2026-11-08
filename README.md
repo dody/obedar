@@ -41,3 +41,11 @@ To download a fresh HTML fixture for a configured restaurant:
 ```bash
 python -m tests.download_fixture "Food Garden"
 ```
+
+## Cron Schedule
+
+To automatically update the repository and run the scraper every workday (Monday–Friday) at 10:00 AM via [run.sh](run.sh), add the following entry with `crontab -e`:
+
+```cron
+0 10 * * 1-5 <projects dir>/obedar/run.sh >> <projects dir>/obedar/cron.log
+```
