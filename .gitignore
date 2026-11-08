@@ -2,3 +2,5 @@ __pycache__
 .pyi
 .env
 venv/
+cron.log
+
