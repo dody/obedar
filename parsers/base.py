@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from urllib.error import HTTPError, URLError
 from urllib.parse import urldefrag
 from urllib.request import Request, urlopen
 
@@ -23,13 +24,27 @@ DEFAULT_HEADERS = {
 }
 
 
-def fetch_html(url: str, timeout: float = 15.0) -> str:
-    """Download raw HTML from `url` and decode it using the response charset (default UTF-8)."""
+def fetch_html(url: str, timeout: float = 15.0, attempts: int = 3) -> str:
+    """Download raw HTML from `url` and decode it using the response charset (default UTF-8).
+
+    Proxy sometimes closes the HTTPS CONNECT tunnel without a response. 
+    Retry those transport failures; HTTP error statuses are returned to the caller immediately.
+    """
+    print(f"Fetching HTML from {url}")
     clean_url = urldefrag(url).url
-    request = Request(clean_url, headers=DEFAULT_HEADERS)
-    with urlopen(request, timeout=timeout) as response:
-        charset = response.headers.get_content_charset() or "utf-8"
-        return response.read().decode(charset, errors="replace")
+    for attempt in range(attempts):
+        request = Request(clean_url, headers=DEFAULT_HEADERS)
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                charset = response.headers.get_content_charset() or "utf-8"
+                return response.read().decode(charset, errors="replace")
+        except HTTPError:
+            raise
+        except URLError:
+            print(f"URLError ({attempt + 1}/{attempts}): {url}")
+            if attempt + 1 >= attempts:
+                raise
+    raise URLError("fetch_html called with no attempts")
 
 
 class ParserError(Exception):
