@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from parsers.base import RestaurantParser
 from parsers.bufet import BufetParser
 from parsers.food_garden import FoodGardenParser
+from parsers.komin import KominParser
 from parsers.lunch_break import LunchBreakParser
 from parsers.sestka import SestkaParser
 from parsers.sme import SmeParser
@@ -43,6 +44,11 @@ RESTAURANTS: list[RestaurantConfig] = [
         section_id="Bufet",
         url="https://bufet.urbancomp.sk/",
         parser=BufetParser,
+    ),
+    RestaurantConfig(
+        section_id="Komin",
+        url="https://restauracie.sme.sk/restauracia/ruzinovsky-pivovar-komin_7814-ruzinov_2980/denne-menu",
+        parser=KominParser,
     ),
     # Add future restaurants here, for example:
     # RestaurantConfig(
